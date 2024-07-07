@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+              /* Reset CSS */
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background-image: url('images/background.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        transition: background-color 0.5s ease;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        border: 1px solid #8e44ad;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        width: 200px;
+        font-size: 1.1rem;
+        transition: border-color 0.3s ease;
+      }
+
+      input[type="text"]:focus {
+        border-color: #5e3099;
+        outline: none;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #8e44ad;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #5e3099;
+      }
+
+      .weather-container {
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        padding: 20px;
+        display: inline-block;
+        text-align: center;
+        transition: background-color 0.5s ease;
+      }
+
+      .city, .country, .description, .temperature, .humidity {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #8e44ad;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+      }
+
+      .city, .country {
+        font-weight: bold;
+      }
+
+      .description {
+        font-style: italic;
+      }
+
+      .temperature, .humidity {
+        font-weight: bold;
+      }
+
+      .weather-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 20px;
+        display: inline-block;
+        text-align: center;
+        transition: background-color 0.5s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 90%;
+      }
+
+      .city, .country {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        color: #8e44ad;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+      }
+
+      .description, .temperature, .humidity {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #8e44ad;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+      }
+
+    </style>
+</head>
+<body>
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <input type="text" id="countryInput" placeholder="Enter country code">
+    <button onclick="getWeatherByCityName()">Check Weather</button>
+
+    <div class="weather-container">
+        <div class="city"></div>
+        <div class="country"></div>
+        <div class="description"></div>
+        <div class="temperature"></div>
+        <div class="humidity"></div>
+    </div>
+
+    <script src="weather.js"></script>
+    
+</body>
+</html>
+
+<script>
+    const API_KEY = '5ef30053969d8fb1103ba051631aebae';
+
+const getWeatherByCityName = async () => {
+    const city = document.getElementById('cityInput').value;
+    const country_code = document.getElementById('countryInput').value;
+    const api_url = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country_code}&appid=${API_KEY}&units=metric`;
+
+    fetch(api_url)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Error retrieving weather data');
+            }
+        })
+        .then(data => {
+            const description = data.weather[0].description;
+            const temperature = data.main.temp;
+            const humidity = data.main.humidity;
+
+            const cityElement = document.querySelector('.city');
+            const countryElement = document.querySelector('.country');
+            const descriptionElement = document.querySelector('.description');
+            const temperatureElement = document.querySelector('.temperature');
+            const humidityElement = document.querySelector('.humidity');
+
+            cityElement.textContent = city;
+            countryElement.textContent = country_code.toUpperCase();
+            descriptionElement.textContent = description;
+            temperatureElement.textContent = `Temperature: ${temperature}°C`;
+            humidityElement.textContent = `Humidity: ${humidity}%`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
+};
+
+</script>
